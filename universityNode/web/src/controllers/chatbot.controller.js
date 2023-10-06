@@ -20,7 +20,6 @@ exports.chatList = async (req, res) => {
  */
 exports.newChat = async (req, res) => {
     let universityId = req.body.university_id;
-    console.log(req.body)
     if (!universityId || isNaN(universityId)) {
         res.status(400).send({message: "Invalid Request!"});
         return;
@@ -48,8 +47,8 @@ exports.newChat = async (req, res) => {
  */
 exports.question = async (req, res) => {
 
-    const chatId = req.query.chat_id;
-    const prompt = req.query.prompt;
+    const chatId = req.body.chat_id;
+    const prompt = req.body.prompt;
 
     if (!chatId || !prompt) {
         return res.status(400).send({message: "Invalid Request!"});
@@ -69,8 +68,8 @@ exports.question = async (req, res) => {
  * Description: Api che inoltra la domanda effettuata in precedenza al sistema Boulez e restituisce la/le risposte
  */
 exports.regenerateQuestion = (req, res) => {
-    const chatId = req.query.chat_id;
-    console.log(chatId)
+    const chatId = req.body.chat_id;
+    console.log("TODO regenerateQuestion", chatId)
     res.send({status: "OK"})
 };
 
@@ -80,8 +79,8 @@ exports.regenerateQuestion = (req, res) => {
  * Description: Api che inoltra il feedback al sistema Boulez
  */
 exports.feedback = (req, res) => {
-    const boulezQuestionId = req.query.question_id;
-    const rating = req.query.rating;
+    const boulezQuestionId = req.body.question_id;
+    const rating = req.body.rating;
 
     if (!boulezQuestionId || !rating) {
         return res.status(400).send({message: "Invalid Request!"});
