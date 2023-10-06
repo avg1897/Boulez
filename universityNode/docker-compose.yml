@@ -1,0 +1,41 @@
+version: '3'
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./nginx/www:/var/www/html
+    container_name: ${CONTAINER_NAME_NGINX}
+    ports:
+      - '80:80'
+    depends_on:
+      - web
+
+  web:
+    build: ./web
+    container_name: ${CONTAINER_NAME_WEB}
+    command: npm run dev
+    volumes:
+      - ./web:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:${API_PORT}"
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: development
+    env_file: .env
+    restart: on-failure
+
+  mongodb:
+    build:
+      context: ./db
+    container_name: ${CONTAINER_NAME_MONGO}
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGODB_DB_NAME}
+      - MONGODB_USERNAME=${MONGODB_USERNAME}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
+    ports:
+      - "27017:${MONGODB_DB_PORT}"
