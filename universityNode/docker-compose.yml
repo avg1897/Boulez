@@ -24,13 +24,11 @@ services:
     environment:
       NODE_ENV: development
     env_file: .env
-    restart: on-failure
 
   mongodb:
     build:
       context: ./db
     container_name: ${CONTAINER_NAME_MONGO}
-    restart: always
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}

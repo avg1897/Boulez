@@ -1,2 +1,2 @@
 start_university_node:
-    cd universityNode && docker-compose up -d
+	cd universityNode && docker-compose up -d

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleziona Materia</title>
+    <link rel="stylesheet" href="css/subjects.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <script src="js/subjects.js" type="text/javascript"></script>
+</head>
+<body>
+    <h1 id="uni_name"></h1>
+    <div class="step-1 list">
+        <a class="subject" href="#">Analisi Matematica 1</a>
+        <a class="subject" href="#">Programmazione 1</a>
+        <a class="subject" href="#">Basi di dati</a>
+        <a class="subject" href="#">Programmazione 2</a>
+        <a class="subject" href="#">Matematica Discreta</a>
+        <a class="subject" href="#">Linguaggi di Programmazione</a>
+    </div>
+    <div class="step-2 hide">
+        <h2 id="subject"></h2>
+        <div class="chatbot">
+            <div class="select-question list">
+                <a class="question" href="#">Domanda 1</a>
+                <a class="question" href="#">Domanda 2</a>
+                <a class="question" href="#">Domanda 3</a>
+            </div>
+            <div class="chatbot hide">
+                <div class="selected-question"></div>
+                <div class="answer-container">
+                    <div class="answer"></div>
+                    <div class="actions-1 actions hide">
+                        <h3>Vuoi rigenerare la risposta?</h3>
+                        <div class="action-container">
+                            <a class="goto-feedback" href="#">No</a>
+                            <a class="regenerate-answer" href="#">Si</a>
+                        </div>
+                    </div>
+                    <div class="actions-2 actions hide">
+                        <h3>Ti è piaciuta la risposta?</h3>
+                        <div class="action-container">
+                            <a class="action-feedback" href="#">No</a>
+                            <a class="action-feedback" href="#">Normale</a>
+                            <a class="action-feedback" href="#">Si</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
