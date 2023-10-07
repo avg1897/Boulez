@@ -31,6 +31,7 @@ exports.newChat = async (req, res) => {
     try {
         console.log("New chat with university id "+universityId)
         await chat.save()
+        await new Promise(resolve => setTimeout(resolve, 5000));
         res.send(chat)
     } catch (e) {
         console.error(e.stackTrace)
@@ -56,7 +57,10 @@ exports.question = async (req, res) => {
 
     try {
         let chat = await Chat.findOneAndUpdate({_id: chatId}, {prompt: prompt});
-        res.send(chat)
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        res.send({
+            answer: 'Risposta generata internamente'
+        })
     } catch (e) {
         return res.status(404).send({message: "Chat not found!"});
     }
@@ -67,25 +71,45 @@ exports.question = async (req, res) => {
  * Output: [{response_id, response, accuracy}]
  * Description: Api che inoltra la domanda effettuata in precedenza al sistema Boulez e restituisce la/le risposte
  */
-exports.regenerateQuestion = (req, res) => {
+exports.regenerateQuestion = async (req, res) => {
     const chatId = req.body.chat_id;
-    console.log("TODO regenerateQuestion", chatId)
-    res.send({status: "OK"})
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    let chat = Chat.findById(chatId);
+    //TODO inviare chat.promt a BOULEZ, salvare gli id delle risposte in boulezAsnwers
+    console.log("TODO regenerateQuestion", chat.prompt)
+    res.send({
+        status: "OK",
+        answers: [
+        {
+            id: 'aaa',
+            answer: "Riposta Boulez 1"
+        },
+        {
+            id: 'aab',
+            answer: "Riposta Boulez 2"
+        },
+    ]})
 };
 
 /**
- * Input: question_id, rating
+ * Input: chat_id, rating
  * Output: {status}
  * Description: Api che inoltra il feedback al sistema Boulez
  */
-exports.feedback = (req, res) => {
-    const boulezQuestionId = req.body.question_id;
+exports.feedback = async (req, res) => {
+    const ratings = ['negative', 'neutral', 'positive']
+    const chat_id = req.body.chat_id
+    const answer_id = req.body.answer_id
     const rating = req.body.rating;
 
-    if (!boulezQuestionId || !rating) {
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    if (!chat_id || !rating || !answer_id || !ratings.includes(rating)) {
         return res.status(400).send({message: "Invalid Request!"});
     }
-    console.log(boulezQuestionId)
-    console.log(rating)
+
+    let chat = Chat.findById(chat_id);
+    //TODO controllare se l'answer_id fa parte della chat
+    console.log(answer_id, rating)
     res.send({status: "OK"})
 };

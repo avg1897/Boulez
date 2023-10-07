@@ -32,3 +32,7 @@ a:hover{
     flex-direction: row;
     justify-content: center;
 }
+
+.answer {
+    margin: 5px;
+}

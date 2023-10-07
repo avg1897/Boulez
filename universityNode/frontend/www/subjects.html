@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
+    <script src="js/ChatbotClient.js" type="text/javascript"></script>
     <script src="js/subjects.js" type="text/javascript"></script>
 </head>
 <body>
@@ -30,7 +31,7 @@
             <div class="chatbot hide">
                 <div class="selected-question"></div>
                 <div class="answer-container">
-                    <div class="answer"></div>
+                    <div class="answers"></div>
                     <div class="actions-1 actions hide">
                         <h3>Vuoi rigenerare la risposta?</h3>
                         <div class="action-container">
@@ -38,12 +39,12 @@
                             <a class="regenerate-answer" href="#">Si</a>
                         </div>
                     </div>
-                    <div class="actions-2 actions hide">
-                        <h3>Ti è piaciuta la risposta?</h3>
+                    <div class="feedback actions hide">
+                        <h3 class="feedback-title"></h3>
                         <div class="action-container">
-                            <a class="action-feedback" href="#">No</a>
-                            <a class="action-feedback" href="#">Normale</a>
-                            <a class="action-feedback" href="#">Si</a>
+                            <a class="action-feedback" data-value="negative" href="#">No</a>
+                            <a class="action-feedback" data-value="neutral" href="#">Normale</a>
+                            <a class="action-feedback" data-value="positive" href="#">Si</a>
                         </div>
                     </div>
                 </div>
