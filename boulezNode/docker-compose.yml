@@ -1,0 +1,29 @@
+version: '3'
+services:
+  api:
+    build: ./api
+    container_name: ${CONTAINER_NAME_API}
+    command: npm run dev
+    volumes:
+      - ./api:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3000:${API_PORT}"
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: development
+    env_file: .env
+
+  mongodb:
+    build:
+      context: ./db
+    container_name: ${CONTAINER_NAME_MONGO}
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGODB_DB_NAME}
+      - MONGODB_USERNAME=${MONGODB_USERNAME}
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
+    ports:
+      - "27017:${MONGODB_DB_PORT}"
