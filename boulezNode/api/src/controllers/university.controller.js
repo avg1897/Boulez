@@ -14,10 +14,28 @@ exports.getAll = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-   let model = req.body;
+    let uni = req.body;
 
-    console.log(model)
-   if (typeof model !== 'object') {
-       return res.status(400).send({message: "Reqest Body must be of type array of objects type University"});
-   }
+    if (typeof uni !== 'object') {
+       return res.status(400).send({message: "Reqest Body must be of University object"});
+    } else if (!uni.name || !uni.api_link) {
+       return res.status(400).send({message: "Missing important data: name or api_link"});
+    }
+    //todo find if there is uni with same name or url
+    let uniObj = {
+        name: uni.name,
+        api_link: uni.api_link,
+    }
+    if (uni.headquarter) uniObj.headquarter = uni.headquarter;
+    try {
+        let university = new University(uniObj)
+        university.save()
+
+        res.status(200).send(university);
+    }catch (e) {
+        console.log(e.message)
+        res.status(500).send({
+           message: "Some error occurred while saving on database."
+        });
+    }
 };
