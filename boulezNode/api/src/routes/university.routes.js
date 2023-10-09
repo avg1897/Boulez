@@ -5,6 +5,8 @@ module.exports = app => {
 
     router.get("/", university.getAll);
 
+    router.delete("/", university.deleteAll);
+
     router.post("/new", university.create);
 
     app.use("/university", router);
