@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const utils = require('../Utils/Utils')
 const University = db.university;
 
+const { TOKEN_SECRET = "secret" } = process.env;
+
 //TODO: createTest, getById, edit(private), updatePassword
 
 exports.getAll = async (req, res) => {
@@ -58,7 +60,7 @@ exports.create = async (req, res) => {
         return res.status(400).send({message: e.message});
     }
 
-    let password = crypto.createHash('md5').update(uni.password).digest('hex');
+    let password = crypto.createHash('md5').update(uni.password+TOKEN_SECRET).digest('hex');
     //todo find if there is uni with same name or url
     let uniObj = {
         name: uni.name,

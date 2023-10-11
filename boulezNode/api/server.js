@@ -29,9 +29,11 @@ app.get("/", (req, res) => {
 });
 
 require("./src/routes/university.routes")(app);
+require("./src/routes/boulez.routes")(app);
 
 // set port, listen for requests
-const PORT = process.env.API_PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
+//todo for logs -> morgan("tiny")
