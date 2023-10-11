@@ -14,8 +14,8 @@ exports.validatePassword = password => {
     }
 }
 
-exports.generateAccessToken = username => {
-    return jwt.sign({user: username}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
+exports.generateAccessToken = id => {
+    return jwt.sign({userId: id}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
 }
 
 exports.authenticateToken = (req, res, next) => {
@@ -24,10 +24,9 @@ exports.authenticateToken = (req, res, next) => {
 
     if (token == null) return res.status(401).send({message: "Error 401: Unauthorized"})
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-        console.log(err)
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, tokenObj) => {
         if (err) return res.status(403).send({message: "Invalid or expired Token"})
-        req.user = user
+        req.userId = tokenObj.userId
         next()
     })
 }

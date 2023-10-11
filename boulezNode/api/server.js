@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("./src/models");
 const bodyParser = require('body-parser')
+const init = require("./src/Utils/init")
 
 const app = express();
 
@@ -30,6 +31,10 @@ app.get("/", (req, res) => {
 
 require("./src/routes/university.routes")(app);
 require("./src/routes/boulez.routes")(app);
+
+if (process.env.NODE_ENV === 'development') {
+    init.createExampleAccounts().then();
+}
 
 // set port, listen for requests
 const PORT = 3000;
