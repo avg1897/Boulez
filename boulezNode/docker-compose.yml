@@ -27,3 +27,7 @@ services:
       - MONGODB_PASSWORD=${MONGODB_PASSWORD}
     ports:
       - "${MONGODB_DB_PORT}:27017"
+networks:
+  default:
+    external: true
+    name: boulez_network
