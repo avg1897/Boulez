@@ -41,7 +41,7 @@ exports.getCompletion = (body, caller_id) => {
                         }
                     })
                     .catch(function (error) {
-                        calledUni++;
+                        allResponses.push({})
                         console.log(error);
                     });
             })
