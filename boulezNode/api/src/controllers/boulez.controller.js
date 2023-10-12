@@ -34,7 +34,9 @@ exports.getCompletion = async (req, res) => {
     console.log(req.body)
     //let callerUniversity = await University.getById(req.userId);
     try {
-        await Boulez.getCompletion(req.userId)
+        let asd = await Boulez.getCompletion(req.body, req.userId)
+        console.log("getCompletion:", asd)
+        return res.send(asd);
     } catch (e) {
         console.log(e);
         return res.status(500).send({message: "Server Error"});
