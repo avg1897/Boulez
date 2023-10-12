@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 require("./src/routes/chatbot.routes")(app);
+require("./src/routes/boulez.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.API_PORT || 3000;
