@@ -18,21 +18,6 @@ exports.getAll = async (req, res) => {
 };
 
 exports.deleteAll = async (req, res) => {
-    //leggere header
-    let user = req.headers['x-user'];
-    let pass = req.headers['x-pass'];
-
-    if (!user || !pass) {
-        return res.status(400).send({
-            message: "This is a private Call only for Admin Users"
-        });
-    }
-    let envPassHash = crypto.createHash('md5').update(process.env.API_PRIVATE_PASS).digest('hex');
-    if (user !== process.env.API_PRIVATE_USER || pass !==  envPassHash) {
-        return res.status(400).send({
-            message: "This is a private Call only for Admin Users"
-        });
-    }
     try {
         await University.deleteMany({});
     }catch (e) {

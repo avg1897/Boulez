@@ -1,9 +1,19 @@
-module.exports = mongoose => {
+module.exports = (mongoose) => {
+    const { v4: uuidv4 } = require('uuid');
     let schema = mongoose.Schema(
         {
+            uniqueId: {
+                type: String,
+                required: true,
+                default: () => uuidv4(7),
+                index: { unique: true },
+            },
             question_id: { type: mongoose.Schema.Types.ObjectId, ref: 'university' },
+            status: String,
             completion: String,
-            accuracy: Number
+            accuracy: Number,
+            error: String,
+            response_timestamp: Number
         },
         { timestamps: true }
     );

@@ -12,21 +12,21 @@ const accounts = [
     {
         "name": "Pegaso",
         "headquarter": "Napoli",
-        "api_link": "university_node_web:3000/boulez/GetCompletion?uni=pegaso",
+        "api_link": "http://university_node_web:3000/boulez/GetCompletion?uni=pegaso",
         "username": "prova@unipegaso.it",
         "password": "Prova1234"
     },
     {
         "name": "Mercatorum",
         "headquarter": "Roma",
-        "api_link": "university_node_web:3000/boulez/GetCompletion?uni=mercatorum",
+        "api_link": "http://university_node_web:3000/boulez/GetCompletion?uni=mercatorum",
         "username": "prova@unimercatorum.it",
         "password": "Prova1234"
     },
     {
         "name": "Sapienza",
         "headquarter": "Roma",
-        "api_link": "university_node_web:3000/boulez/GetCompletion?uni=sapienza",
+        "api_link": "http://university_node_web:3000/boulez/GetCompletion?uni=sapienza",
         "username": "prova@uniroma1.it",
         "password": "Prova1234"
     }

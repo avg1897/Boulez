@@ -34,13 +34,88 @@ exports.getCompletion = async (req, res) => {
     console.log(req.body)
     //let callerUniversity = await University.getById(req.userId);
     try {
-        let asd = await Boulez.getCompletion(req.body, req.userId)
-        console.log("getCompletion:", asd)
-        return res.send(asd);
+        //creo la domanda nel db
+        let questionObj = {
+            university_id: req.userId,
+            request_id: req.body.id,
+            request_timestamp: req.body.timestamp,
+            prompt: req.body.prompt
+        }
+        let question = new Question(questionObj);
+        question.save();
+
+        let uniResponses = await Boulez.getCompletion(req.body, req.userId)
+        console.log("getCompletion:", uniResponses)
+
+        //SCELTA RISPOSTE
+        //salvo le risposte a db
+        //restituisco la risposta con l'accurancy piu alto
+        let currentAccuracy = 0
+        let completions = []
+        let responseIds = []
+
+        uniResponses.forEach(response => {
+            try {
+                let resObj = {
+                    question_id: question.id,
+                    status: response.status,
+                }
+                if (response.status === 'OK') {
+                    resObj = {
+                        ...resObj,
+                        completion: response.completion,
+                        accuracy: response.accuracy,
+                        response_timestamp: response.timestamp
+                    }
+                } else {
+                    resObj = {
+                        ...resObj,
+                        error: response.error
+                    }
+                }
+                let answer = new Answer(resObj)
+                answer.save()
+
+                if (response.status === 'OK') {
+                    if (response.accuracy > currentAccuracy) {
+                        currentAccuracy = response.accuracy
+                        completions = [{
+                            id: answer.id,
+                            completion: response.completion
+                        }]
+                        responseIds = [answer.id]
+                    } else if (response.accuracy === currentAccuracy) {
+                        //solo in caso di accuracy uguali restituisco un altra risposta
+                        completions.push({
+                            id: answer.id,
+                            completion: response.completion
+                        })
+                        responseIds.push(answer.id)
+                    }
+                }
+            }catch (e) {
+                console.log(e)
+            }
+        })
+
+        if (completions.length === 0) {
+            res.status(500).send({
+                error: "No response from other nodes"
+            })
+            //todo log con notifica di errore
+        }
+
+        let response = {
+            id: question.id,
+            completions: completions,
+            timestamp: Date.now()
+        }
+        question.responseIds = responseIds;
+        question.save()
+
+        return res.send(response);
     } catch (e) {
         console.log(e);
         return res.status(500).send({message: "Server Error"});
     }
-
-    return res.status(200).send({});
 };

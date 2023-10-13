@@ -1,9 +1,6 @@
 const db = require("../models");
-const utils = require('../Utils/Utils')
 const axios = require('axios')
 const University = db.university;
-const Answer = db.answer;
-const Question = db.question;
 
 exports.getCompletion = (body, caller_id) => {
     return new Promise((resolve => {
@@ -23,27 +20,43 @@ exports.getCompletion = (body, caller_id) => {
                 console.log(index)
                 console.log(uni.name)
                 console.log(uni.api_link)
-                axios.post(
-                    "http://"+uni.api_link,
-                    {
-                        prompt: body.prompt,
-                        id: body.id
-                    }
-                )
-                    .then(function (response) {
-                        console.log(response.data);
-                        allResponses.push({
-                            university_id: uni._id,
-                            response: response.data
+                try {
+                    axios.post(
+                        uni.api_link,
+                        {
+                            prompt: body.prompt,
+                            id: body.id,
+                            timestamp: Date.now(),
+                        },
+                        {timeout: process.env.CALL_TIMEOUT || 10000}
+                    )
+                        .then(function (response) {
+                            console.log(response.data);
+                            allResponses.push({
+                                university_id: uni._id,
+                                status: 'OK',
+                                completion: response.data.completion,
+                                accuracy: response.data.accuracy,
+                                timestamp: response.data.timestamp
+                            })
+                            if (allResponses.length === universityCount) {
+                                resolve(allResponses)
+                            }
                         })
-                        if (allResponses.length === universityCount) {
-                            resolve(allResponses)
-                        }
-                    })
-                    .catch(function (error) {
-                        allResponses.push({})
-                        console.log(error);
-                    });
+                        .catch(function (error) {
+                            allResponses.push({
+                                university_id: uni._id,
+                                status: 'KO',
+                                error: error.code
+                            })
+                            if (allResponses.length === universityCount) {
+                                resolve(allResponses)
+                            }
+                        });
+                }catch (e) {
+                    console.log(e)
+                    resolve(allResponses)
+                }
             })
         })()
     }))

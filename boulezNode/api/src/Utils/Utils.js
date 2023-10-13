@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 exports.validatePassword = password => {
     if(password.length < 8) {
@@ -29,4 +30,23 @@ exports.authenticateToken = (req, res, next) => {
         req.userId = tokenObj.userId
         next()
     })
+}
+
+exports.authenticateAdmin = (req, res, next) => {
+    //leggere header
+    let user = req.headers['x-user'];
+    let pass = req.headers['x-pass'];
+
+    if (!user || !pass) {
+        return res.status(400).send({
+            message: "This is a private Call only for Admin Users"
+        });
+    }
+    let envPassHash = crypto.createHash('md5').update(process.env.API_PRIVATE_PASS).digest('hex');
+    if (user !== process.env.API_PRIVATE_USER || pass !==  envPassHash) {
+        return res.status(400).send({
+            message: "This is a private Call only for Admin Users"
+        });
+    }
+    next()
 }
