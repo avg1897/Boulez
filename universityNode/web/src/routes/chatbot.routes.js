@@ -13,5 +13,9 @@ module.exports = app => {
 
     router.post("/feedback", chatbot.feedback);
 
+    router.get('/getAll', chatbot.getAll);
+
+    router.delete('/delete', chatbot.deleteAll)
+
     app.use("/chatbot/chat", router);
 };
