@@ -49,6 +49,7 @@ class ChatbotClient {
         try {
             let response = await $.post(this.backend, req);
             let data = JSON.parse(response)
+            console.log(data)
             return data.answers
         } catch (e) {
             console.log(e)

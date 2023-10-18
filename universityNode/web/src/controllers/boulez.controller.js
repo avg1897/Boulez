@@ -1,6 +1,7 @@
 const db = require("../models");
 
 exports.getCompletion = async (req, res) => {
+    console.log("Get Completion called by Boulez START")
     let uniName = req.query.uni;
     let prompt = req.body.prompt;
     if (!uniName || !prompt) {
@@ -16,5 +17,6 @@ exports.getCompletion = async (req, res) => {
         accuracy: Math.random(),
         timestamp: Date.now()
     }
+    console.log("Get Completion called by Boulez END")
     return res.send(response)
 };

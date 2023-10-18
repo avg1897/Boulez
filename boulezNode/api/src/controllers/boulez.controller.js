@@ -106,9 +106,10 @@ exports.getCompletion = async (req, res) => {
         }
 
         let response = {
+            status: "OK",
             id: question.id,
             completions: completions,
-            timestamp: Date.now()
+            timestamp: new Date()
         }
         question.responseIds = responseIds;
         question.save()
@@ -116,6 +117,6 @@ exports.getCompletion = async (req, res) => {
         return res.send(response);
     } catch (e) {
         console.log(e);
-        return res.status(500).send({message: "Server Error"});
+        return res.status(500).send({status: "KO", message: "Server Error"});
     }
 };

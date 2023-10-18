@@ -3,7 +3,7 @@ module.exports = mongoose => {
         {
             university_id: String,
             prompt: String,
-            boulezAnswers: { type: Array, default: [] },
+            boulezAnswer: { type: Object, default: {} },
             accepted: { type: Boolean, default: true }
         },
         { timestamps: true }

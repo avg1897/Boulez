@@ -26,7 +26,10 @@ exports.authenticateToken = (req, res, next) => {
     if (token == null) return res.status(401).send({message: "Error 401: Unauthorized"})
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, tokenObj) => {
-        if (err) return res.status(403).send({message: "Invalid or expired Token"})
+        if (err) return res.status(403).send({
+            status: "KO",
+            message: "Invalid or expired Token"
+        })
         req.userId = tokenObj.userId
         next()
     })

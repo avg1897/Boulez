@@ -10,7 +10,7 @@ module.exports = (mongoose) => {
             },
             university_id: String,
             request_id: String,
-            request_timestamp: Number,
+            request_timestamp: String,
             prompt: String,
             responseIds: Array,
         },

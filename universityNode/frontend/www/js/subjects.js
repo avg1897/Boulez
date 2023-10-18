@@ -70,11 +70,12 @@ $(document).ready(function () {
         $('.answers').empty();
         $('.answers').append(`<div class="answer">Risposta: ...</div>`)
         let answers = await chatbotClient.regenerateQuestion(chatId);
+        console.log("answers", answers)
         $('.answers').empty();
         answers.forEach((answer) => {
             let item = `<div class="answer">
-                Risposta: ${answer.answer}
-                <a class="goto-feedback" onclick="gotoFeedback('${answer.id}', '${answer.answer}')" href="#">Vota la risposta</a>
+                Risposta: ${answer.completion}
+                <a class="goto-feedback" onclick="gotoFeedback('${answer.id}', '${answer.completion}')" href="#">Vota la risposta</a>
                 </div>`
             $('.answers').append(item)
         })

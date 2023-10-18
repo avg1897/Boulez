@@ -1,5 +1,7 @@
 const db = require("../models");
 const axios = require("axios");
+const utils = require("../utils/Utils")
+const { v4: uuidv4 } = require('uuid');
 const Chat = db.chat;
 
 exports.chatList = async (req, res) => {
@@ -85,18 +87,38 @@ exports.regenerateQuestion = async (req, res) => {
         //TODO inviare chat.promt a BOULEZ, salvare gli id delle risposte in boulezAsnwers
         console.log("TODO regenerateQuestion", chat.prompt)
 
-        res.send({
-            status: "OK",
-            answers: [
-                {
-                    id: 'aaa',
-                    answer: "Riposta Boulez 1"
-                },
-                {
-                    id: 'aab',
-                    answer: "Riposta Boulez 2"
-                },
-            ]})
+        let token = await utils.getToken()
+        if (token.error) {
+            res.status(500).send({message: "server error"})
+        }
+        let config = {
+            headers: {
+                Authorization: 'Bearer '+token
+            }
+        }
+        let request = {
+            prompt: chat.prompt,
+            id: uuidv4(7),
+            subject: "Analisi Matematica",
+            timestamp: new Date()
+        }
+        console.log(request)
+
+        let boulezGetCompletion = await axios.post(
+            process.env.BOULEZ_HOSTNAME+"/api/getcompletion",
+            request,
+            config)
+        if (boulezGetCompletion.data.status === 'OK') {
+            chat.boulezAnswer = boulezGetCompletion.data;
+            chat.save()
+            console.log(chat.boulezAnswer)
+            res.send({
+                status: "OK",
+                answers: chat.boulezAnswer.completions
+            })
+        } else {
+            res.status(500).send({status: "KO", message: "Server Error"})
+        }
     } catch (e) {
         console.log(e)
         res.status(500).send()
