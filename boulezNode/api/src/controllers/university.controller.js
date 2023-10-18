@@ -5,8 +5,6 @@ const University = db.university;
 
 const { TOKEN_SECRET = "secret" } = process.env;
 
-//TODO: createTest, getById, edit(private), updatePassword
-
 exports.getAll = async (req, res) => {
     try {
         let universities = await University.find({})
@@ -46,7 +44,7 @@ exports.create = async (req, res) => {
     }
 
     let password = crypto.createHash('md5').update(uni.password+TOKEN_SECRET).digest('hex');
-    //todo find if there is uni with same name or url
+
     let uniObj = {
         name: uni.name,
         api_link: uni.api_link,

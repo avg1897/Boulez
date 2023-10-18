@@ -84,8 +84,6 @@ exports.regenerateQuestion = async (req, res) => {
         console.log("Chat id:"+chatId)
         //await new Promise(resolve => setTimeout(resolve, 5000));
         let chat = await Chat.findById(chatId);
-        //TODO inviare chat.promt a BOULEZ, salvare gli id delle risposte in boulezAsnwers
-        console.log("TODO regenerateQuestion", chat.prompt)
 
         let token = await utils.getToken()
         if (token.error) {

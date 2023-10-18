@@ -82,7 +82,6 @@ $(document).ready(function () {
     })
 
     $('.action-feedback').click(async (event) => {
-        //TODO: dare feedback 1 volta per risposta
         event.preventDefault();
         let rating = $(event.target).attr('data-value');
         if (!feedback) {

@@ -30,9 +30,6 @@ exports.login = async (req, res) => {
 }
 
 exports.getCompletion = async (req, res) => {
-    //todo check user token
-    console.log(req.body)
-    //let callerUniversity = await University.getById(req.userId);
     try {
         //creo la domanda nel db
         let questionObj = {
@@ -99,10 +96,10 @@ exports.getCompletion = async (req, res) => {
         })
 
         if (completions.length === 0) {
+            console.log("No response from other nodes")
             res.status(500).send({
                 error: "No response from other nodes"
             })
-            //todo log con notifica di errore
         }
 
         let response = {
