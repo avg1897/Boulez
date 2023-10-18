@@ -132,20 +132,55 @@ exports.regenerateQuestion = async (req, res) => {
  */
 exports.feedback = async (req, res) => {
     const ratings = ['negative', 'neutral', 'positive']
+    const ratingMapping = {
+        negative: -1,
+        neutral: 0,
+        positive: 1
+    }
     const chat_id = req.body.chat_id
     const answer_id = req.body.answer_id
     const rating = req.body.rating;
 
-    //await new Promise(resolve => setTimeout(resolve, 5000));
-
     if (!chat_id || !rating || !answer_id || !ratings.includes(rating)) {
         return res.status(400).send({message: "Invalid Request!"});
     }
+    try {
+        let token = await utils.getToken()
+        if (token.error) {
+            res.status(500).send({message: "server error"})
+        }
 
-    let chat = Chat.findById(chat_id);
-    //TODO controllare se l'answer_id fa parte della chat
-    console.log(answer_id, rating)
-    res.send({status: "OK"})
+        let chat = await Chat.findById(chat_id);
+        console.log(`Feedback, chatId ${chat_id} type ${rating}`)
+
+        let answer = chat.boulezAnswer.completions.filter(completion => completion.id === answer_id)
+
+        if (answer) {
+            let config = {
+                headers: {
+                    Authorization: 'Bearer '+token
+                }
+            }
+            let request = {
+                completionId: answer_id,
+                rating: ratingMapping[rating]
+            }
+            let boulezFeedback = await axios.post(process.env.BOULEZ_HOSTNAME+"/api/feedback", request, config)
+            if (boulezFeedback.data.status === 'OK') {
+                console.log("Feedback Response OK")
+                return res.send({status: "OK"})
+            } else {
+                console.log("Bad response from Boulez: "+JSON.stringify(boulezFeedback.data))
+                return res.status(500).send({status: "KO", message: "Server Error"})
+            }
+        }else {
+            console.log("Cannot find answer "+answer_id)
+            return res.status(400).send({status: "KO"})
+        }
+    }catch (e) {
+        console.log("Error", e)
+        res.status(500).send({status: "KO", message: "Server Error"})
+    }
 };
 
 exports.getAll = async (req, res) => {

@@ -120,3 +120,35 @@ exports.getCompletion = async (req, res) => {
         return res.status(500).send({status: "KO", message: "Server Error"});
     }
 };
+
+exports.feedback = async (req, res) => {
+    let completionId = req.body.completionId
+    let rating = req.body.rating
+    console.log(req.body)
+
+    if (typeof rating === 'string' && !isNaN(rating)) {
+        rating = parseInt(rating)
+    }
+
+    if (!completionId || !rating) {
+        return res.status(400).send({status: "KO", message: "Missing required parameter completionId, rating"})
+    } else if (rating < -1 || rating > 1) {
+        return res.status(400).send({status: "KO", message: "Rating parameter must be between -1 and +1"})
+    }
+
+    try {
+        let answer = await Answer.findById(completionId)
+
+        if (!answer.rating) {
+            answer.rating = rating;
+            answer.save()
+            return res.send({status: "OK"})
+        }else {
+            return res.status(400).send({status: "KO", message: "Feedback already sent"})
+        }
+    }catch (e) {
+        console.log("Feedback Error", e)
+        return res.status(500).send({status: "KO", message: "Internal Server Error"})
+    }
+
+}

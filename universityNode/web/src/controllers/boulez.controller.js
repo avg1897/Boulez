@@ -15,7 +15,7 @@ exports.getCompletion = async (req, res) => {
         id: req.body.id,
         completion: "Risposta data da: "+req.query.uni,
         accuracy: Math.random(),
-        timestamp: Date.now()
+        timestamp: new Date()
     }
     console.log("Get Completion called by Boulez END")
     return res.send(response)

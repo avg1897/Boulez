@@ -13,7 +13,8 @@ module.exports = (mongoose) => {
             completion: String,
             accuracy: Number,
             error: String,
-            response_timestamp: Number
+            rating: Number,
+            response_timestamp: String
         },
         { timestamps: true }
     );

@@ -10,5 +10,7 @@ module.exports = app => {
 
     router.post("/getcompletion", utils.authenticateToken, boulez.getCompletion);
 
+    router.post("/feedback", utils.authenticateToken, boulez.feedback);
+
     app.use("/api", router);
 };
