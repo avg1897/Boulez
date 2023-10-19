@@ -127,7 +127,7 @@ exports.feedback = async (req, res) => {
         rating = parseInt(rating)
     }
 
-    if (!completionId || !rating) {
+    if (!completionId || isNaN(rating)) {
         return res.status(400).send({status: "KO", message: "Missing required parameter completionId, rating"})
     } else if (rating < -1 || rating > 1) {
         return res.status(400).send({status: "KO", message: "Rating parameter must be between -1 and +1"})

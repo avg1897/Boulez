@@ -1,6 +1,6 @@
 const chatbotClient = new ChatbotClient();
 let chatId;
-let feedback = false;
+let feedback = [];
 let currentAnswerSelected;
 $(document).ready(function () {
     let queryParam = new URLSearchParams(window.location.search);
@@ -84,15 +84,28 @@ $(document).ready(function () {
     $('.action-feedback').click(async (event) => {
         event.preventDefault();
         let rating = $(event.target).attr('data-value');
-        if (!feedback) {
-            feedback = true;
-            let response = await chatbotClient.feedback(chatId, currentAnswerSelected, rating);
-            if (response.status === 'OK') {
+        if (!feedback.includes(currentAnswerSelected)) {
+            feedback.push(currentAnswerSelected);
+            if (chatId !== 0) {
+                let response = await chatbotClient.feedback(chatId, currentAnswerSelected, rating);
+                if (response.status === 'OK') {
+                    alert('Grazie per il tuo feedback!')
+                } else {
+                    alert('Hai già inviato il feedback per questa risposta!')
+                }
+            }else {
                 alert('Grazie per il tuo feedback!')
-            } else {
-                alert('Hai già inviato il feedback per questa risposta!')
             }
+        }else {
+            alert('Hai già inviato il feedback per questa risposta!')
         }
+    })
+
+    $('.goto-feedback').click(async (event) => {
+        event.preventDefault();
+        $('.actions-1').hide()
+        chatId = 0
+        gotoFeedback(0, "Risposta generata internamente")
     })
 
 
@@ -100,6 +113,7 @@ $(document).ready(function () {
 
 function gotoFeedback(question_id, prompt) {
     currentAnswerSelected = question_id
+    console.log("curr answer", currentAnswerSelected)
     $('.feedback').removeClass('hide')
     $('.feedback-title').text(`Ti è piaciuta la risposta ${prompt} ?`)
 }
