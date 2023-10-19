@@ -14,14 +14,14 @@ $(document).ready(function () {
 
     switch (universty_id) {
         default:
-        case 1:
-            title.text("Pegaso")
+        case "1":
+            title.append('<img src="img/pegaso.png" alt="Pegaso">')
             break;
-        case 2:
-            title.text("Mercatorum")
+        case "2":
+            title.append('<img src="img/unimercatorum.png" alt="Uni Mercatorum">')
             break;
-        case 3:
-            title.text("La Sapienza")
+        case "3":
+            title.append('<img src="img/sapienza.png" alt="Sapienza">')
             break;
     }
 
