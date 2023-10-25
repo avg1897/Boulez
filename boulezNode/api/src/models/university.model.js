@@ -13,7 +13,9 @@ module.exports = (mongoose) => {
             api_link: String,
             enabled: {type: Boolean, default: true},
             username: String,
-            password: String
+            password: String,
+            generalRating: {type: Number, default: 0},
+            trustPercentage: {type: Number, default: 1}
         },
         { timestamps: true }
     );

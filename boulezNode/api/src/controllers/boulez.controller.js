@@ -56,6 +56,7 @@ exports.getCompletion = async (req, res) => {
                 let resObj = {
                     question_id: question.id,
                     status: response.status,
+                    university_id: response.university_id
                 }
                 if (response.status === 'OK') {
                     resObj = {
@@ -111,6 +112,12 @@ exports.getCompletion = async (req, res) => {
         question.responseIds = responseIds;
         question.save()
 
+        for (const answerId of responseIds) {
+            let answer = await Answer.findById(answerId)
+            answer.selected = true
+            answer.save()
+        }
+
         return res.send(response);
     } catch (e) {
         console.log(e);
@@ -148,4 +155,52 @@ exports.feedback = async (req, res) => {
         return res.status(500).send({status: "KO", message: "Internal Server Error"})
     }
 
+}
+
+
+/**
+ * Modulo Update Trust
+ * Prende tutte le risposte non elaborate e assegna
+ * per ogni università, il rating generale e la % di trust
+ */
+exports.updateTrust = async (req, res) => {
+    //x ogni università prendo tutte le domande non elaborate (trustProcessed=false)
+    //e processo il rating generale (somma di tutti i feedback +1,-1) e lo aggiungo al rating già esistente sul db
+    //aggiorno la percentuale di trust = 1 + (ratingGenerale/100)
+    let universities = await University.find({})
+
+    for (const uni of universities) {
+        let generalRating = 0
+
+        let answerNotElaborated = await Answer.find({
+            university_id: uni._id,
+            selected: true
+        })
+        for (const answer of answerNotElaborated) {
+            try {
+                answer.processed = true
+                answer.save()
+                generalRating += answer.rating
+            }catch (e) {
+                console.log(e)
+                res.status(500).send({error: e})
+            }
+        }
+
+        try {
+            uni.generalRating += generalRating
+            uni.trustPercentage = 1 + (uni.generalRating/100)
+            uni.save()
+            console.log(uni.name)
+            console.log(uni.generalRating)
+            console.log(uni.trustPercentage)
+        }catch (e) {
+            console.log(e)
+            console.log("error saving uni "+uni.id)
+            console.log("general rating to add: "+generalRating)
+            res.status(500).send({error: e})
+            break;
+        }
+    }
+    res.send({status: "OK"})
 }

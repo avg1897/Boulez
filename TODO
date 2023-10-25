@@ -146,5 +146,33 @@ sicuramente ora siamo ad una versione primordiale, ma col tempo possiamo andare 
 
 ...domande
 
-
 3!=6
+
+Sezione Feedback:
+Prima dell'invio della risposta al chiamante, Boulez dovrà passare le risposte ricevute in un altro modulo che si occupa di selezionare la/le risposte.
+Questo modulo sarà chiamato ogni tot. tempo (a cron magari) e prenderà in input tutti i feedback che non sono stati elaborati, e li convertirà ad in una percentuale.
+Per implementare un algoritmo per testare questo modulo, questa percentuale potrebbe essere:
+
+RatingGenerale = somma tra i rating (quindi i +1 e i -1)
+Percentuale =  1 + (RatingGenerale /100)
+
+Esempio negativo, univ. con rating generale basso ad esempio -4, la percentuale sarà 1 - 0.04 = 0.06
+e quindi l'accuracy di una risposta dell'università es. 0.85 diventerà: 0.85 * 0.06 = 0.79
+
+Esempio Positivo, univ. con rating generale alto ad esempio +4, la percentuale sarà 1 + 0.04 = 1.04
+e quindi l'accuracy di una risposta dell'università es. 0.85 diventerà: 0.85 * 1.04 = 0.88
+
+Quindi infine, Boulez dopo aver raccolto tutte le risposte dalle varie università andrà solo a moltiplicare il dato accuracy ricevuto con questa percentuale precalcolata da questo modulo.
+La risposta a valle sarà data ovviamente dall'accuracy più alta calcolata .
+Lato applicativo, per non ricalcolare ad ogni elaborazione di questo modulo tutte le risposte per avere questo RatingGenerale, salviamo a db, per ogni università,
+sia il RatingGenerale calcolato in precedenza sia l'accuracy calcolata.
+In un secondo run ovviamente al rating generale non saranno calcolati già i feedback elaborati, ma saranno aggiunti solo quelli nuovi, invece la percentuale verrà ricalcolata.
+
+
+Sezione Materia:
+Costruisco un API esposta a tutti che avrà i dati di ogni materia: id, nome materia. (al momento bastano)
+Le università devono mappare gli id delle materie date da boulez, con gli id delle proprie materie,
+In quanto ad una chiamata GetCompletion bisognerà anche passare questo id materia, così da dare informazioni ai sistemi a valle della materia specifica su cui costruire la risposta.
+In più, ogni università potrà dovrà inserire una lista di materie in base a cui essere chiamata per dare una risposta.
+Ad Esempio, l'università Pegaso, magari non avendo corsi o materie inerenti a medicina, non si iscriverà ad ricevere da Boulez domande inerenti a queste materie,
+così che Boulez possa chiamare le sole università che siano iscritte alla materia e quindi che abbiamo possibilità di dare la risposta.

@@ -3,14 +3,17 @@ module.exports = app => {
     const utils = require('../Utils/Utils')
     let router = require("express").Router();
 
-
-
-    /* middleware from here needs auth */
     router.post("/login", boulez.login);
 
     router.post("/getcompletion", utils.authenticateToken, boulez.getCompletion);
 
     router.post("/feedback", utils.authenticateToken, boulez.feedback);
+
+    /**
+     * Questa rotta è stata create per simulare il funzionamento di un cron
+     * che ogni settimana esegue l'aggiornamento dei rating delle unviersità
+     */
+    router.get('/cron/updateTrust', utils.authenticateAdmin, boulez.updateTrust)
 
     app.use("/api", router);
 };
