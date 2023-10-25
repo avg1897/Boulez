@@ -1,6 +1,8 @@
 const db = require("../models");
 const axios = require('axios')
 const University = db.university;
+const Answer = db.answer;
+const Question = db.question;
 
 exports.getCompletion = (body, caller_id) => {
     return new Promise((resolve => {
@@ -61,5 +63,83 @@ exports.getCompletion = (body, caller_id) => {
         })()
     }))
 
+}
+
+exports.saveAnswers = async (uniResponses, questionId) => {
+    for (const response of uniResponses) {
+        let resObj = {
+            question_id: questionId,
+            status: response.status,
+            university_id: response.university_id
+        }
+        if (response.status === 'OK') {
+            resObj = {
+                ...resObj,
+                completion: response.completion,
+                accuracy: response.accuracy,
+                response_timestamp: response.timestamp
+            }
+        } else {
+            resObj = {
+                ...resObj,
+                error: response.error
+            }
+        }
+        let answer = new Answer(resObj)
+        await answer.save()
+    }
+}
+
+/**
+ * TODO Implementare Logica
+ * Al momento prendo le risposte con l'accuracy piu alta
+ */
+exports.chooseAnswer = async questionId => {
+    //Da impostare i valori
+    let c1 = 1
+    let c2 = 1
+
+    let currentAccuracy = 0
+    let completions = []
+    let responseIds = []
+
+    try {
+        let answers = await Answer.find({question_id: questionId})
+        for (const answer of answers) {
+            if (answer.status === 'OK') {
+                let university = await University.findById(answer.university_id)
+
+                //TODO Cambiare Formula
+                let answerAccuracy = university.trustPercentage * answer.accuracy;
+
+                if (answerAccuracy > currentAccuracy) {
+                    currentAccuracy = answerAccuracy
+                    completions = [{
+                        id: answer.id,
+                        completion: answer.completion
+                    }]
+                    responseIds = [answer.id]
+                } else if (answerAccuracy === currentAccuracy) {
+                    //solo in caso di accuracy uguali restituisco un altra risposta
+                    completions.push({
+                        id: answer.id,
+                        completion: answer.completion
+                    })
+                    responseIds.push(answer.id)
+                }
+            }
+        }
+    } catch (e) {
+        console.log(e)
+        return {
+            status: "KO",
+            error: e
+        }
+    }
+    return {
+        status: "OK",
+        responseIds: responseIds,
+        completions: completions
+    }
 }
 

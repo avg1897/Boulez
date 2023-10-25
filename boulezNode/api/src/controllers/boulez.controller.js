@@ -45,74 +45,28 @@ exports.getCompletion = async (req, res) => {
         console.log("getCompletion:", uniResponses)
 
         //SCELTA RISPOSTE
-        //salvo le risposte a db
-        //restituisco la risposta con l'accurancy piu alto
-        let currentAccuracy = 0
-        let completions = []
-        let responseIds = []
+        await Boulez.saveAnswers(uniResponses, question.id)
+        let answers = await Boulez.chooseAnswer(question.id)
 
-        uniResponses.forEach(response => {
-            try {
-                let resObj = {
-                    question_id: question.id,
-                    status: response.status,
-                    university_id: response.university_id
-                }
-                if (response.status === 'OK') {
-                    resObj = {
-                        ...resObj,
-                        completion: response.completion,
-                        accuracy: response.accuracy,
-                        response_timestamp: response.timestamp
-                    }
-                } else {
-                    resObj = {
-                        ...resObj,
-                        error: response.error
-                    }
-                }
-                let answer = new Answer(resObj)
-                answer.save()
-
-                if (response.status === 'OK') {
-                    if (response.accuracy > currentAccuracy) {
-                        currentAccuracy = response.accuracy
-                        completions = [{
-                            id: answer.id,
-                            completion: response.completion
-                        }]
-                        responseIds = [answer.id]
-                    } else if (response.accuracy === currentAccuracy) {
-                        //solo in caso di accuracy uguali restituisco un altra risposta
-                        completions.push({
-                            id: answer.id,
-                            completion: response.completion
-                        })
-                        responseIds.push(answer.id)
-                    }
-                }
-            }catch (e) {
-                console.log(e)
-            }
-        })
-
-        if (completions.length === 0) {
+        if (answers.status === "KO" || answers.completions.length === 0) {
             console.log("No response from other nodes")
             res.status(500).send({
-                error: "No response from other nodes"
+                error: "Server Error"
             })
         }
 
         let response = {
             status: "OK",
             id: question.id,
-            completions: completions,
+            completions: answers.completions,
             timestamp: new Date()
         }
-        question.responseIds = responseIds;
+        question.responseIds = answers.responseIds
         question.save()
 
-        for (const answerId of responseIds) {
+        // impost attr selected = true per risposte scelte
+        // -> serve per il cercare le risposte non elaborate dal modulo trust
+        for (const answerId of answers.responseIds) {
             let answer = await Answer.findById(answerId)
             answer.selected = true
             answer.save()
@@ -120,8 +74,8 @@ exports.getCompletion = async (req, res) => {
 
         return res.send(response);
     } catch (e) {
-        console.log(e);
-        return res.status(500).send({status: "KO", message: "Server Error"});
+        console.log(e)
+        return res.status(500).send({status: "KO", message: "Server Error"})
     }
 };
 
