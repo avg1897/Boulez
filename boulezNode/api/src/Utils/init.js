@@ -6,6 +6,7 @@
 const crypto = require('crypto');
 const db = require("../models");
 const University = db.university;
+const Subject = db.subject;
 const { TOKEN_SECRET = "secret" } = process.env;
 
 const accounts = [
@@ -32,6 +33,15 @@ const accounts = [
     }
 ]
 
+const subjects = [
+    "Analisi Matematica 1",
+    "Programmazione 1",
+    "Basi di Dati",
+    "Programmazione 2",
+    "Matematica Discreta",
+    "Linguaggi di Programmazione"
+]
+
 exports.createExampleAccounts = async () => {
     let UniNumer = await University.count({})
     if (UniNumer !== 0) {
@@ -56,4 +66,22 @@ exports.createExampleAccounts = async () => {
         }
     })
 
+}
+
+exports.createExampleSubjects = async () => {
+    let SubjectNum = await Subject.count({})
+    if (SubjectNum !== 0) {
+        return;
+    }
+
+    subjects.forEach(materia => {
+        try {
+           let subject = new Subject({name: materia})
+            subject.save()
+            console.log("Created Materia "+materia)
+        }catch (e) {
+            console.log(e.message)
+        }
+
+    })
 }

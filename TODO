@@ -176,3 +176,7 @@ In quanto ad una chiamata GetCompletion bisognerà anche passare questo id mater
 In più, ogni università potrà dovrà inserire una lista di materie in base a cui essere chiamata per dare una risposta.
 Ad Esempio, l'università Pegaso, magari non avendo corsi o materie inerenti a medicina, non si iscriverà ad ricevere da Boulez domande inerenti a queste materie,
 così che Boulez possa chiamare le sole università che siano iscritte alla materia e quindi che abbiamo possibilità di dare la risposta.
+
+Problemi:
+Lista Materie: al momento ci sono sono delle materie "Generali", quindi non sono collegate ad un corso di studi,
+questo significa che si potrebbe interrogare Boulez per una materia presente in piu corsi di studio

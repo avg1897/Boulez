@@ -9,6 +9,8 @@ module.exports = app => {
 
     router.post("/feedback", utils.authenticateToken, boulez.feedback);
 
+    router.get('/getSubjects', boulez.getSubjects)
+
     /**
      * Questa rotta è stata create per simulare il funzionamento di un cron
      * che ogni settimana esegue l'aggiornamento dei rating delle unviersità

@@ -35,6 +35,7 @@ require("./src/routes/question.routes")(app);
 
 if (process.env.NODE_ENV === 'development') {
     init.createExampleAccounts().then();
+    init.createExampleSubjects().then();
 }
 
 // set port, listen for requests

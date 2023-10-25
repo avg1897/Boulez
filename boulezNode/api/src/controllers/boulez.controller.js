@@ -5,6 +5,7 @@ const Boulez = require('../core/Boulez')
 const University = db.university;
 const Answer = db.answer;
 const Question = db.question;
+const Subject = db.subject;
 
 const { TOKEN_SECRET = "secret" } = process.env;
 
@@ -157,4 +158,9 @@ exports.updateTrust = async (req, res) => {
         }
     }
     res.send({status: "OK"})
+}
+
+exports.getSubjects = async (req, res) => {
+    let subject = await Subject.find({})
+    return res.json(subject)
 }
