@@ -9,6 +9,7 @@ module.exports = (mongoose) => {
                 index: { unique: true },
             },
             university_id: String,
+            subject_id: String,
             request_id: String,
             request_timestamp: String,
             prompt: String,

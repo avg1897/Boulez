@@ -2,7 +2,7 @@ const chatbotClient = new ChatbotClient();
 let chatId;
 let feedback = [];
 let currentAnswerSelected;
-$(document).ready(function () {
+$(document).ready(async function () {
     let queryParam = new URLSearchParams(window.location.search);
     let universty_id = queryParam.get('universty_id')
 
@@ -25,12 +25,21 @@ $(document).ready(function () {
             break;
     }
 
+    //carica materie
+    let subjects = await chatbotClient.getSubject()
+    if (!subjects.status) {
+        subjects.forEach(subject => {
+            $('.step-1').append(`<a class="subject" data-id="${subject.id}" href="#">${subject.name}</a>`)
+        })
+    }
+
     $('.subject').click(async (event) => {
         event.preventDefault();
 
         $('.step-1').addClass('hide')
+        let subjectId = $(event.target).attr('data-id');
 
-        let chat = await chatbotClient.newChat(universty_id)
+        let chat = await chatbotClient.newChat(universty_id, subjectId)
         if (chat) {
             console.log(chat)
             chatId = chat.id;

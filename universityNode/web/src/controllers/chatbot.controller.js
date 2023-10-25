@@ -23,13 +23,15 @@ exports.chatList = async (req, res) => {
  */
 exports.newChat = async (req, res) => {
     let universityId = req.body.university_id;
-    if (!universityId || isNaN(universityId)) {
+    let subjectId = req.body.subject_id;
+    if (!universityId || isNaN(universityId) || !subjectId) {
         res.status(400).send({message: "Invalid Request!"});
         return;
     }
 
     const chat = new Chat({
-        university_id: universityId
+        university_id: universityId,
+        subject_id: subjectId
     });
     try {
         console.log("New chat with university id "+universityId)
@@ -97,7 +99,7 @@ exports.regenerateQuestion = async (req, res) => {
         let request = {
             prompt: chat.prompt,
             id: uuidv4(7),
-            subject: "Analisi Matematica",
+            subject: chat.subject_id,
             timestamp: new Date()
         }
         console.log(request)
@@ -201,4 +203,16 @@ exports.deleteAll = async (req, res) => {
         });
     }
     return res.status(200).send({message: 'All Entities Deleted'});
+};
+
+exports.getSubjects = async (req, res) => {
+    try {
+        let subjects = await axios.get(process.env.BOULEZ_HOSTNAME+"/api/getSubjects")
+        return res.send(subjects.data)
+    }catch (e) {
+        console.log(e.message)
+        return res.status(500).send({
+            message: e.message || "Some error occurred while saving on database."
+        });
+    }
 };

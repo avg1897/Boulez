@@ -17,5 +17,7 @@ module.exports = app => {
 
     router.delete('/delete', chatbot.deleteAll)
 
+    router.post('/subjects', chatbot.getSubjects)
+
     app.use("/chatbot/chat", router);
 };

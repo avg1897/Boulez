@@ -37,6 +37,7 @@ exports.getCompletion = async (req, res) => {
             university_id: req.userId,
             request_id: req.body.id,
             request_timestamp: req.body.timestamp,
+            subject_id: req.body.subject,
             prompt: req.body.prompt
         }
         let question = new Question(questionObj);

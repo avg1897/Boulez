@@ -5,11 +5,28 @@ class ChatbotClient {
         this.chatId = null
     }
 
-    async newChat(universityId) {
+    async getSubject() {
+        let req = {
+            method: 'subjects',
+            body: {
+                test: true
+            }
+        }
+        try {
+            let response = await $.post(this.backend, req);
+            return JSON.parse(response)
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    }
+
+    async newChat(universityId, subjectId) {
         let req = {
             method: 'new',
             body: {
-                university_id: universityId
+                university_id: universityId,
+                subject_id: subjectId
             }
         }
         try {

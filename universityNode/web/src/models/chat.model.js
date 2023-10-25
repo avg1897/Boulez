@@ -2,6 +2,7 @@ module.exports = mongoose => {
     let schema = mongoose.Schema(
         {
             university_id: String,
+            subject_id: String, //boulez subject id
             prompt: String,
             boulezAnswer: { type: Object, default: {} },
             accepted: { type: Boolean, default: true }
