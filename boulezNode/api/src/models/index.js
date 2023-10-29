@@ -11,5 +11,6 @@ db.question = require("./question.model.js")(mongoose);
 db.university = require("./university.model.js")(mongoose);
 db.answer = require("./answer.model.js")(mongoose);
 db.subject = require("./subject.model.js")(mongoose);
+db.degree = require("./degree.model.js")(mongoose);
 
 module.exports = db;

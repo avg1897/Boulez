@@ -2,6 +2,8 @@ const db = require("../models");
 const crypto = require('crypto');
 const utils = require('../Utils/Utils')
 const University = db.university;
+const Subject = db.subject;
+const Degree = db.degree;
 
 const { TOKEN_SECRET = "secret" } = process.env;
 
@@ -18,6 +20,8 @@ exports.getAll = async (req, res) => {
 exports.deleteAll = async (req, res) => {
     try {
         await University.deleteMany({});
+        await Subject.deleteMany({});
+        await Degree.deleteMany({});
     }catch (e) {
         console.log(e.message)
         res.status(500).send({
@@ -25,7 +29,7 @@ exports.deleteAll = async (req, res) => {
         });
     }
 
-    return res.status(200).send({message: 'All Universities Deleted'});
+    return res.status(200).send({message: 'All Entities Deleted'});
 
 };
 

@@ -180,3 +180,6 @@ così che Boulez possa chiamare le sole università che siano iscritte alla mate
 Problemi:
 Lista Materie: al momento ci sono sono delle materie "Generali", quindi non sono collegate ad un corso di studi,
 questo significa che si potrebbe interrogare Boulez per una materia presente in piu corsi di studio
+
+Fare lista di API VISIBILI DALL'ESERNO
+con/senza auth

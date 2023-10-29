@@ -34,8 +34,10 @@ require("./src/routes/boulez.routes")(app);
 require("./src/routes/question.routes")(app);
 
 if (process.env.NODE_ENV === 'development') {
-    init.createExampleAccounts().then();
-    init.createExampleSubjects().then();
+    init.createExampleDegrees().then(async () => {
+        await init.createExampleAccounts()
+        await init.createExampleSubjects()
+    });
 }
 
 // set port, listen for requests

@@ -2,7 +2,6 @@ module.exports = (mongoose) => {
     let schema = mongoose.Schema(
         {
             name: String,
-            degree: {type: Array, default: []}
         },
         {}
     );
@@ -13,5 +12,5 @@ module.exports = (mongoose) => {
         return object;
     });
 
-    return mongoose.model("Subject", schema);
+    return mongoose.model("Degree", schema);
 };
