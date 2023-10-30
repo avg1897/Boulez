@@ -9,6 +9,8 @@ module.exports = app => {
 
     router.post("/feedback", utils.authenticateToken, boulez.feedback);
 
+    router.get('/getDegrees', boulez.getDegrees)
+
     router.get('/getSubjects', boulez.getSubjects)
 
     /**

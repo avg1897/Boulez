@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const db = require("../models");
 const crypto = require('crypto');
 const utils = require('../Utils/Utils')
@@ -6,6 +7,7 @@ const University = db.university;
 const Answer = db.answer;
 const Question = db.question;
 const Subject = db.subject;
+const Degree = db.degree;
 
 const { TOKEN_SECRET = "secret" } = process.env;
 
@@ -162,6 +164,16 @@ exports.updateTrust = async (req, res) => {
 }
 
 exports.getSubjects = async (req, res) => {
-    let subject = await Subject.find({})
-    return res.json(subject)
+    let subjects;
+    if (req.query.degreeId) {
+        subjects = await Subject.find({degree: {$in: new mongoose.Types.ObjectId(req.query.degreeId)}})
+    } else {
+        subjects = await Subject.find({})
+    }
+    return res.json(subjects)
+}
+
+exports.getDegrees = async (req, res) => {
+    let degrees = await Degree.find({})
+    return res.json(degrees)
 }
