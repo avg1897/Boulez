@@ -1,9 +1,6 @@
-const fs = require('fs')
-const fsPromises = require('fs').promises
-const path = require('path')
 const axios = require('axios')
-
-const tokenFilePath = './TOKEN'
+const db = require("../models");
+const University = db.university;
 /**
  * function read / write file TOKEN in root dir.
  * if file doens't exist -> make call to boulez login and write
@@ -11,45 +8,35 @@ const tokenFilePath = './TOKEN'
  * if file exist check creation date, if is expired, call boulez login and
  * recreate TOKEN file
  */
-exports.getToken = async () => {
+exports.getToken = async (uniId) => {
     try {
-        await fsPromises.access(tokenFilePath, fs.constants.F_OK);
-        let tokenFile = await fsPromises.readFile(tokenFilePath, "binary");
-        let tokenData = JSON.parse(tokenFile)
+        let university = await University.findOne({university_id: uniId})
+        let tokenCreatedAt = new Date(university.createdAt)
         let now = new Date()
-        let tokenCreatedAt = new Date(tokenData.created_at)
         let diff = Math.abs(tokenCreatedAt - now) / 1000;
+        console.log(diff)
         if (diff < 3600) {
-            return tokenData.token
-        } else {
-            let tokenData = await this.createNewToken()
-            if (!tokenData.error) {
-                await fsPromises.writeFile(tokenFilePath, JSON.stringify(tokenData))
-                return tokenData.token
-            }
+            return university.token;
+        }else {
+            return await this.createNewToken(uniId);
         }
     } catch (e) {
-        let tokenData = await this.createNewToken()
-        if (!tokenData.error) {
-            await fsPromises.writeFile(tokenFilePath, JSON.stringify(tokenData))
-            return tokenData.token
-        }
+        return await this.createNewToken(uniId);
     }
-    return {error: true}
 }
 
-exports.createNewToken = async () => {
+exports.createNewToken = async (uniId) => {
     try {
+        let university = await University.findOne({university_id: uniId})
         let login = await axios.post(process.env.BOULEZ_HOSTNAME+"/api/login", {
-            username: process.env.BOULEZ_USERNAME,
-            password: process.env.BOULEZ_PASSWORD
+            username: university.username,
+            password: university.password
         })
         if (login.data.status === 'OK') {
-            return {
-                error: false,
-                token: login.data.token,
-                created_at: new Date()
-            }
+            university.token = login.data.token
+            university.createdAt = new Date()
+            await university.save()
+            return login.data.token
         }
     }catch (e) {
         console.log("exception", e)

@@ -7,6 +7,8 @@ mongoose.Promise = global.Promise;
 const db = {};
 db.mongoose = mongoose;
 db.url = dbConfig.url;
+console.log(db.url)
 db.chat = require("./chat.model.js")(mongoose);
+db.university = require("./university.model.js")(mongoose);
 
 module.exports = db;

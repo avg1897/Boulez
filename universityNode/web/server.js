@@ -1,5 +1,6 @@
 const express = require("express");
 const db = require("./src/models");
+const init = require("./src/utils/init");
 const bodyParser = require('body-parser')
 
 const app = express();
@@ -30,6 +31,10 @@ app.get("/", (req, res) => {
 
 require("./src/routes/chatbot.routes")(app);
 require("./src/routes/boulez.routes")(app);
+
+if (process.env.NODE_ENV === 'development') {
+    init.crateUniDatabase().then();
+}
 
 // set port, listen for requests
 const PORT = process.env.API_PORT || 3000;

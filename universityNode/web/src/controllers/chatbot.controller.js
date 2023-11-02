@@ -3,6 +3,7 @@ const axios = require("axios");
 const utils = require("../utils/Utils")
 const { v4: uuidv4 } = require('uuid');
 const Chat = db.chat;
+const University = db.university;
 
 exports.chatList = async (req, res) => {
     try {
@@ -87,7 +88,7 @@ exports.regenerateQuestion = async (req, res) => {
         //await new Promise(resolve => setTimeout(resolve, 5000));
         let chat = await Chat.findById(chatId);
 
-        let token = await utils.getToken()
+        let token = await utils.getToken(chat.university_id)
         if (token.error) {
             res.status(500).send({message: "server error"})
         }
@@ -145,12 +146,12 @@ exports.feedback = async (req, res) => {
         return res.status(400).send({message: "Invalid Request!"});
     }
     try {
-        let token = await utils.getToken()
+        let chat = await Chat.findById(chat_id);
+        let token = await utils.getToken(chat.university_id)
         if (token.error) {
             res.status(500).send({message: "server error"})
         }
 
-        let chat = await Chat.findById(chat_id);
         console.log(`Feedback, chatId ${chat_id} type ${rating}`)
 
         let answer = chat.boulezAnswer.completions.filter(completion => completion.id === answer_id)
@@ -205,9 +206,29 @@ exports.deleteAll = async (req, res) => {
     return res.status(200).send({message: 'All Entities Deleted'});
 };
 
+exports.getDegrees = async (req, res) => {
+    try {
+        let universityFrontendId = req.body.university_id;
+        let token = await utils.getToken(universityFrontendId)
+        let config = {
+            headers: {
+                Authorization: 'Bearer '+token
+            }
+        }
+        let subjects = await axios.post(process.env.BOULEZ_HOSTNAME+"/api/getDegrees", {}, config)
+        return res.send(subjects.data)
+    }catch (e) {
+        console.log(e.message)
+        return res.status(500).send({
+            message: e.message || "Some error occurred while saving on database."
+        });
+    }
+};
+
 exports.getSubjects = async (req, res) => {
     try {
-        let subjects = await axios.get(process.env.BOULEZ_HOSTNAME+"/api/getSubjects")
+        let degreeId = req.body.degreeId
+        let subjects = await axios.get(process.env.BOULEZ_HOSTNAME+"/api/getSubjects?degreeId="+degreeId)
         return res.send(subjects.data)
     }catch (e) {
         console.log(e.message)

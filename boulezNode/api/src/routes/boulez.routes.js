@@ -9,7 +9,11 @@ module.exports = app => {
 
     router.post("/feedback", utils.authenticateToken, boulez.feedback);
 
+    router.post('/getDegrees', utils.authenticateToken, boulez.getDegrees)
+
     router.get('/getDegrees', boulez.getDegrees)
+
+    router.post('/getSubjects', utils.authenticateToken, boulez.getSubjects)
 
     router.get('/getSubjects', boulez.getSubjects)
 

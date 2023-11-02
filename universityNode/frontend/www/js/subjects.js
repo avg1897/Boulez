@@ -2,9 +2,9 @@ const chatbotClient = new ChatbotClient();
 let chatId;
 let feedback = [];
 let currentAnswerSelected;
+let queryParam = new URLSearchParams(window.location.search);
+let universty_id = queryParam.get('universty_id')
 $(document).ready(async function () {
-    let queryParam = new URLSearchParams(window.location.search);
-    let universty_id = queryParam.get('universty_id')
 
     if (!universty_id) {
         window.location.href = "/index.html"
@@ -25,29 +25,12 @@ $(document).ready(async function () {
             break;
     }
 
-    //carica materie
-    let subjects = await chatbotClient.getSubject()
-    if (!subjects.status) {
-        subjects.forEach(subject => {
-            $('.step-1').append(`<a class="subject" data-id="${subject.id}" href="#">${subject.name}</a>`)
+    let degrees = await chatbotClient.getDegrees(universty_id);
+    if (!degrees.status) {
+        degrees.forEach(degree => {
+            $('.step-0').append(`<a class="degree" onclick="onDegreeClick(event)" data-id="${degree.id}" href="#">${degree.name}</a>`)
         })
     }
-
-    $('.subject').click(async (event) => {
-        event.preventDefault();
-
-        $('.step-1').addClass('hide')
-        let subjectId = $(event.target).attr('data-id');
-
-        let chat = await chatbotClient.newChat(universty_id, subjectId)
-        if (chat) {
-            console.log(chat)
-            chatId = chat.id;
-
-            $('.step-2').removeClass('hide')
-            $('#subject').text(event.target.text)
-        }
-    })
 
     //todo copiare stile da https://codepen.io/ramilulu/pen/mrNoXw
     $('.question').click(async (event) => {
@@ -125,4 +108,35 @@ function gotoFeedback(question_id, prompt) {
     console.log("curr answer", currentAnswerSelected)
     $('.feedback').removeClass('hide')
     $('.feedback-title').text(`Ti è piaciuta la risposta ${prompt} ?`)
+}
+
+async function onDegreeClick(event) {
+    event.preventDefault();
+
+    $('.step-0').addClass('hide')
+    $('.step-1').removeClass('hide')
+    let degreeId = $(event.target).attr('data-id');
+
+    let subjects = await chatbotClient.getSubject(degreeId)
+    if (!subjects.status) {
+        subjects.forEach(subject => {
+            $('.step-1').append(`<a class="subject" onclick="onSubjectClick(event)" data-id="${subject.id}" href="#">${subject.name}</a>`)
+        })
+    }
+}
+
+async function onSubjectClick(event) {
+    event.preventDefault();
+
+    $('.step-1').addClass('hide')
+    let subjectId = $(event.target).attr('data-id');
+
+    let chat = await chatbotClient.newChat(universty_id, subjectId)
+    if (chat) {
+        console.log(chat)
+        chatId = chat.id;
+
+        $('.step-2').removeClass('hide')
+        $('#subject').text(event.target.text)
+    }
 }

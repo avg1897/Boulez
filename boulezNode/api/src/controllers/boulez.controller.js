@@ -175,5 +175,9 @@ exports.getSubjects = async (req, res) => {
 
 exports.getDegrees = async (req, res) => {
     let degrees = await Degree.find({})
+    if (req.userId) {
+        let uni = await University.findById(req.userId)
+        degrees = await Degree.find({_id: {$in: uni.courses}})
+    }
     return res.json(degrees)
 }

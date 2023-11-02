@@ -19,9 +19,6 @@ exports.getCompletion = (body, caller_id) => {
             let universities = universitiesQuery.map((uni) => uni.toObject());
 
             universities.forEach((uni, index) => {
-                console.log(index)
-                console.log(uni.name)
-                console.log(uni.api_link)
                 try {
                     axios.post(
                         uni.api_link,
