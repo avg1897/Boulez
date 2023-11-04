@@ -2,19 +2,26 @@ const db = require("../models");
 const axios = require('axios')
 const University = db.university;
 const Answer = db.answer;
-const Question = db.question;
+const Subject = db.subject;
 
 exports.getCompletion = (body, caller_id) => {
     return new Promise((resolve => {
         (async () => {
             if (!caller_id || caller_id === '') {
                 throw new Error("Caller University Not Found, please login again")
-            }else if (!body.prompt || !body.id ) {
+            }else if (!body.prompt || !body.id || !body.subject ) {
                 throw new Error("Wrong Input data")
             }
+            let subject = await Subject.findById(body.subject)
+            console.log("Materia Selezionata: "+subject.name)
+
             //taking all universities except caller
-            let universitiesQuery = await University.find({_id: {$ne: caller_id}})
-            let universityCount = await University.count({_id: {$ne: caller_id}});
+            let query = {
+                _id: {$ne: caller_id},
+                courses: {$in: subject.degree}
+            };
+            let universitiesQuery = await University.find(query)
+            let universityCount = await University.count(query)
             let allResponses = [];
             let universities = universitiesQuery.map((uni) => uni.toObject());
 
@@ -25,6 +32,7 @@ exports.getCompletion = (body, caller_id) => {
                         {
                             prompt: body.prompt,
                             id: body.id,
+                            subject: subject.name,
                             timestamp: Date.now(),
                         },
                         {timeout: process.env.CALL_TIMEOUT || 10000}
