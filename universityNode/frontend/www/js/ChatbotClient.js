@@ -5,27 +5,11 @@ class ChatbotClient {
         this.chatId = null
     }
 
-    async getDegrees(uniId) {
-        let req = {
-            method: 'degrees',
-            body: {
-                university_id: uniId
-            }
-        }
-        try {
-            let response = await $.post(this.backend, req);
-            return JSON.parse(response)
-        } catch (e) {
-            console.log(e)
-            return false
-        }
-    }
-
-    async getSubject(degreeId) {
+    async getSubject(uniId) {
         let req = {
             method: 'subjects',
             body: {
-                degreeId: degreeId
+                university_id: uniId
             }
         }
         try {

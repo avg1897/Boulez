@@ -25,10 +25,10 @@ $(document).ready(async function () {
             break;
     }
 
-    let degrees = await chatbotClient.getDegrees(universty_id);
-    if (!degrees.status) {
-        degrees.forEach(degree => {
-            $('.step-0').append(`<a class="degree" onclick="onDegreeClick(event)" data-id="${degree.id}" href="#">${degree.name}</a>`)
+    let subjects = await chatbotClient.getSubject(universty_id)
+    if (!subjects.status) {
+        subjects.forEach(subject => {
+            $('.step-1').append(`<a class="subject" onclick="onSubjectClick(event)" data-id="${subject.id}" href="#">${subject.name}</a>`)
         })
     }
 
@@ -48,7 +48,7 @@ $(document).ready(async function () {
         let answers = [answer]
         answers.forEach((answer) => {
             let item = `<div class="answer">
-                Risposta: ${answer}
+                Risposta: ${answer} <br /><br />
                 <a class="goto-feedback" onclick="gotoFeedback('0', '${answer}')" href="#">Vota la risposta</a>
                 </div>`
             $('.answers').append(item)
@@ -66,7 +66,7 @@ $(document).ready(async function () {
         $('.answers').empty();
         answers.forEach((answer) => {
             let item = `<div class="answer">
-                Risposta: ${answer.completion}
+                Risposta: ${answer.completion} <br /><br />
                 <a class="goto-feedback" onclick="gotoFeedback('${answer.id}', '${answer.completion}')" href="#">Vota la risposta</a>
                 </div>`
             $('.answers').append(item)
@@ -108,21 +108,6 @@ function gotoFeedback(question_id, prompt) {
     console.log("curr answer", currentAnswerSelected)
     $('.feedback').removeClass('hide')
     $('.feedback-title').text(`Ti è piaciuta la risposta ${prompt} ?`)
-}
-
-async function onDegreeClick(event) {
-    event.preventDefault();
-
-    $('.step-0').addClass('hide')
-    $('.step-1').removeClass('hide')
-    let degreeId = $(event.target).attr('data-id');
-
-    let subjects = await chatbotClient.getSubject(degreeId)
-    if (!subjects.status) {
-        subjects.forEach(subject => {
-            $('.step-1').append(`<a class="subject" onclick="onSubjectClick(event)" data-id="${subject.id}" href="#">${subject.name}</a>`)
-        })
-    }
 }
 
 async function onSubjectClick(event) {

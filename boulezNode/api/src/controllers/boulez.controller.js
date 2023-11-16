@@ -164,5 +164,15 @@ exports.updateTrust = async (req, res) => {
 
 exports.getSubjects = async (req, res) => {
     let subjects = await Subject.find({})
+    console.log("test")
+    if (req.userId) {
+        try {
+            let uni = await University.findById(req.userId)
+            subjects = await Subject.find({_id: {$in: uni.subjects}})
+        } catch (e) {
+            console.log("Exception: ", e)
+            return res.json({status: "KO"})
+        }
+    }
     return res.json(subjects)
 }

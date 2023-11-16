@@ -206,29 +206,25 @@ exports.deleteAll = async (req, res) => {
     return res.status(200).send({message: 'All Entities Deleted'});
 };
 
-exports.getDegrees = async (req, res) => {
+exports.getSubjects = async (req, res) => {
     try {
         let universityFrontendId = req.body.university_id;
         let token = await utils.getToken(universityFrontendId)
+        if (token.error) {
+            res.status(500).send({message: "server error"})
+        }
         let config = {
             headers: {
                 Authorization: 'Bearer '+token
             }
         }
-        let subjects = await axios.post(process.env.BOULEZ_HOSTNAME+"/api/getDegrees", {}, config)
-        return res.send(subjects.data)
-    }catch (e) {
-        console.log(e.message)
-        return res.status(500).send({
-            message: e.message || "Some error occurred while saving on database."
-        });
-    }
-};
 
-exports.getSubjects = async (req, res) => {
-    try {
-        let degreeId = req.body.degreeId
-        let subjects = await axios.get(process.env.BOULEZ_HOSTNAME+"/api/getSubjects?degreeId="+degreeId)
+        let subjects = await axios.post(
+            process.env.BOULEZ_HOSTNAME+"/api/getSubjects",
+            {},
+            config
+        )
+        console.log(subjects.data)
         return res.send(subjects.data)
     }catch (e) {
         console.log(e.message)

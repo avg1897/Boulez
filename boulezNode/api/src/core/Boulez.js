@@ -18,7 +18,7 @@ exports.getCompletion = (body, caller_id) => {
             //taking all universities except caller
             let query = {
                 _id: {$ne: caller_id},
-                courses: {$in: subject.degree}
+                subjects: {$in: [subject.id]}
             };
             let universitiesQuery = await University.find(query)
             let universityCount = await University.count(query)
