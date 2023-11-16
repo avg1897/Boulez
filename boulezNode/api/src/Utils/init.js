@@ -7,15 +7,7 @@ const crypto = require('crypto');
 const db = require("../models");
 const University = db.university;
 const Subject = db.subject;
-const Degree = db.degree;
 const { TOKEN_SECRET = "secret" } = process.env;
-
-const degrees = [
-    "Informatica",
-    "Fisica",
-    "Chimica",
-    "Matematica"
-]
 
 const accounts = [
     {
@@ -103,14 +95,22 @@ exports.createExampleAccounts = async () => {
 
     for (const uni of accounts) {
         let password = crypto.createHash('md5').update(uni.password+TOKEN_SECRET).digest('hex');
-        let degrees = await Degree.find({name: {"$in": uni.courses}}, 'id')
-        let degreesId = Object.values(degrees).map( degree => degree._id)
+
+        let subjects_id = []
+        for (const course of uni.courses) {
+            let materie = subjects.filter( s => s.degree.includes(course))
+            let subjectsName = materie.map( s => s.name)
+            let subject = await Subject.find({name: {"$in": subjectsName}}, "id");
+            let newSubjects = Object.values(subject).map( s => s._id.toHexString())
+            //immetto i nuovi id in subjects id omettendo duplicati
+            subjects_id = subjects_id.concat(newSubjects.filter( id => !subjects_id.includes(id)))
+        }
         let uniObj = {
             name: uni.name,
             api_link: uni.api_link,
             username: uni.username,
             password: password,
-            courses: degreesId
+            subjects: subjects_id
         }
         if (uni.headquarter) uniObj.headquarter = uni.headquarter;
         try {
@@ -124,23 +124,6 @@ exports.createExampleAccounts = async () => {
 
 }
 
-exports.createExampleDegrees = async () => {
-    let DegreesNum = await Degree.count({})
-    if (DegreesNum !== 0) {
-        return;
-    }
-
-    degrees.forEach( laurea => {
-        try {
-            let degree = new Degree({name: laurea})
-            degree.save()
-            console.log("Created Laurea "+laurea+" "+degree._id)
-        }catch (e) {
-            console.log(e.message)
-        }
-    })
-}
-
 exports.createExampleSubjects = async () => {
     let SubjectNum = await Subject.count({})
     if (SubjectNum !== 0) {
@@ -149,11 +132,8 @@ exports.createExampleSubjects = async () => {
 
     for (const materia of subjects) {
         try {
-            let degrees = await Degree.find({name: {"$in": materia.degree}}, 'id')
-            let degreesId = Object.values(degrees).map( degree => degree._id)
             let subject = new Subject({
-               name: materia.name,
-               degree: degreesId
+               name: materia.name
             })
             subject.save()
             console.log("Created Materia "+materia.name)

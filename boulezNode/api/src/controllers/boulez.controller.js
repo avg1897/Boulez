@@ -7,7 +7,6 @@ const University = db.university;
 const Answer = db.answer;
 const Question = db.question;
 const Subject = db.subject;
-const Degree = db.degree;
 
 const { TOKEN_SECRET = "secret" } = process.env;
 
@@ -164,20 +163,6 @@ exports.updateTrust = async (req, res) => {
 }
 
 exports.getSubjects = async (req, res) => {
-    let subjects;
-    if (req.query.degreeId) {
-        subjects = await Subject.find({degree: {$in: new mongoose.Types.ObjectId(req.query.degreeId)}})
-    } else {
-        subjects = await Subject.find({})
-    }
+    let subjects = await Subject.find({})
     return res.json(subjects)
-}
-
-exports.getDegrees = async (req, res) => {
-    let degrees = await Degree.find({})
-    if (req.userId) {
-        let uni = await University.findById(req.userId)
-        degrees = await Degree.find({_id: {$in: uni.courses}})
-    }
-    return res.json(degrees)
 }

@@ -14,7 +14,7 @@ module.exports = (mongoose) => {
             enabled: {type: Boolean, default: true},
             username: String,
             password: String,
-            courses: {type: Array, default: []},
+            subjects: {type: Array, default: []},
             generalRating: {type: Number, default: 0},
             trustPercentage: {type: Number, default: 1}
         },

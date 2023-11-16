@@ -1,8 +1,7 @@
 module.exports = (mongoose) => {
     let schema = mongoose.Schema(
         {
-            name: String,
-            degree: {type: Array, default: []}
+            name: String
         },
         {}
     );
