@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "6cc92344-ce87-4f4a-8908-d0388d6bf839",
+		"name": "Tesi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11762574"
+	},
+	"item": [
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Get All Chats",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{host}}{{chat}}",
+							"host": [
+								"{{host}}{{chat}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Chat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"university_id\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{chat}}/new",
+							"host": [
+								"{{host}}{{chat}}"
+							],
+							"path": [
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Question",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"chat_id\": \"65208cd2d5877c6f7c93ebf9\",\r\n    \"prompt\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{chat}}/question",
+							"host": [
+								"{{host}}{{chat}}"
+							],
+							"path": [
+								"question"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Boulez",
+			"item": [
+				{
+					"name": "Question",
+					"item": [
+						{
+							"name": "Get All Questions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}/question",
+									"host": [
+										"{{hostBoulez}}"
+									],
+									"path": [
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete all Questions and Answers",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}/question",
+									"host": [
+										"{{hostBoulez}}"
+									],
+									"path": [
+										"question"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Answers",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}/question/answers",
+									"host": [
+										"{{hostBoulez}}"
+									],
+									"path": [
+										"question",
+										"answers"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cron Update Trust",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}/api/cron/updateTrust",
+									"host": [
+										"{{hostBoulez}}"
+									],
+									"path": [
+										"api",
+										"cron",
+										"updateTrust"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Chatbot",
+					"item": [
+						{
+							"name": "Get All Chats",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{chat}}/getAll",
+									"host": [
+										"{{host}}{{chat}}"
+									],
+									"path": [
+										"getAll"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Chats",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{host}}{{chat}}/delete",
+									"host": [
+										"{{host}}{{chat}}"
+									],
+									"path": [
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Uni",
+					"item": [
+						{
+							"name": "GetAllUniversities",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}{{university}}",
+									"host": [
+										"{{hostBoulez}}{{university}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New University",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Pegaso\",\r\n    \"headquarter\": \"Napoli\",\r\n    \"api_link\": \"localhost:3000/boulez/GetCompletion\",\r\n    \"username\": \"prova@unipegaso.it\",\r\n    \"password\": \"Prova1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{hostBoulez}}{{university}}/new",
+									"host": [
+										"{{hostBoulez}}{{university}}"
+									],
+									"path": [
+										"new"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete All Universities (PRIVATE)",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text"
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}{{university}}",
+									"host": [
+										"{{hostBoulez}}{{university}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Subjects",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-USER",
+										"value": "root",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "X-PASS",
+										"value": "21232f297a57a5a743894a0e4a801fc3",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{hostBoulez}}/api/getSubjects",
+									"host": [
+										"{{hostBoulez}}"
+									],
+									"path": [
+										"api",
+										"getSubjects"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"prova@unipegaso.it\",\r\n    \"password\": \"Prova1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostBoulez}}{{boulezApi}}/login",
+							"host": [
+								"{{hostBoulez}}{{boulezApi}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCompletion",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prompt\": \"Test Domanda\",\r\n    \"id\": \"aaa\",\r\n    \"subject\": \"Analisi Matematica\",\r\n    \"timestamp\": 1697219261\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostBoulez}}{{boulezApi}}/getcompletion",
+							"host": [
+								"{{hostBoulez}}{{boulezApi}}"
+							],
+							"path": [
+								"getcompletion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Feedback",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"prompt\": \"Test Domanda\",\r\n    \"id\": \"aaa\",\r\n    \"subject\": \"Analisi Matematica\",\r\n    \"timestamp\": 1697219261\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{hostBoulez}}{{boulezApi}}/feedback",
+							"host": [
+								"{{hostBoulez}}{{boulezApi}}"
+							],
+							"path": [
+								"feedback"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "hostBoulez",
+			"value": "localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "chat",
+			"value": "/chatbot/chat",
+			"type": "string"
+		},
+		{
+			"key": "university",
+			"value": "/university",
+			"type": "string"
+		},
+		{
+			"key": "boulezApi",
+			"value": "/api",
+			"type": "string"
+		}
+	]
+}
